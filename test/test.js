@@ -19,7 +19,7 @@ describe('real-mouse', function() {
   after(() => server.close());
   
   beforeEach(() => nightmare = Nightmare());
-  afterEach(done => nightmare.end(() => done()));
+  afterEach(() => nightmare.end());
   
   describe('realClick', function() {
     it('should trigger all related mouse events', function() {
