@@ -24,7 +24,7 @@
     "nightmare": "^2.4.0"
   },
   "devDependencies": {
-    "express": "^4.13.4",
+    "express": "^4.15.0",
     "mocha": "^3.0.1"
   }
 }
