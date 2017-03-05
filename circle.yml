@@ -6,13 +6,16 @@ dependencies:
   post:
     # Install peer dependencies for testing
     - npm install nightmare
-    # - npm install mocha-junit-reporter
+    - npm install mocha-junit-reporter
+    - npm install junit-merge
 
 test:
   override:
-    - npm test
+    # - npm test
+    - mocha test --reporter mocha-junit-reporter:
+        environment:
+          MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/test-results-1.xml
+    - echo '<?xml version="1.0" encoding="UTF-8"?><testsuites name="Other Tests" time="2.05" tests="1" failures="1"><testsuite name="Fail please" timestamp="2017-03-05T18:05:32" tests="1" failures="1" time="0.242"><testcase name="test should fail" time="0.242" classname="test should fail"></testcase></testsuite></testsuites>' > $CIRCLE_TEST_REPORTS/junit/test-results-2.xml
+    - ./node_modules/.bin/junit-merge $CIRCLE_TEST_REPORTS/junit/test-results-1.xml $CIRCLE_TEST_REPORTS/junit/test-results-2.xml --out $CIRCLE_TEST_REPORTS/junit/test-results.xml
     # - echo 'Failing test:' && mv whoseywatsit whoseywhatsit2
-    # - mocha test --reporter mocha-junit-reporter:
-    #     environment:
-    #       MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/test-results.xml
-    - mv whowhat whowhat2; if [ $? -ne 0 ]; then ./send-github-status.js 'ci/circle:Suite 2' 'The second test suite failed' 'failure'; else ./send-github-status.js 'ci/circle:Suite 2' 'The second test suite passed' 'success'; fi
+    # - mv whowhat whowhat2; if [ $? -ne 0 ]; then ./send-github-status.js 'ci/circle:Suite 2' 'The second test suite failed' 'failure'; else ./send-github-status.js 'ci/circle:Suite 2' 'The second test suite passed' 'success'; fi
