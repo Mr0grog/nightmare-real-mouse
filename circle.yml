@@ -1,0 +1,8 @@
+machine:
+  node:
+    version: 6.10.2
+
+dependencies:
+  post:
+    # Install peer dependencies for testing
+    - npm install nightmare
