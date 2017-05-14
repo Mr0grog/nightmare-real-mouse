@@ -1,5 +1,7 @@
 # nightmare-real-mouse
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Mr0grog/nightmare-real-mouse.svg)](https://greenkeeper.io/)
+
 An experimental [Nightmare](https://github.com/segmentio/nightmare) plugin for triggering true mouse events in the browser (instead of simulated ones as Nightmare currently does).
 
 Example usage:
