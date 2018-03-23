@@ -12,7 +12,8 @@ basic_build: &basic_build
     - run:
         name: Dependencies
         command: |
-          npm install --no-save "nightmare@$NIGHTMARE_VERSION"
+          # --no-save would be nice here, but seems to be broken in NPM 5 :(
+          npm install "nightmare@$NIGHTMARE_VERSION"
           npm install
     - save_cache:
         key: dependency-cache-{{ arch }}-{{ checksum "package.json" }}-{{ .Environment.CIRCLE_STAGE }}
