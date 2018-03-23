@@ -135,7 +135,8 @@ describe('real-mouse', function() {
         .then(() => {
           throw new Error('Using a non-existent selector did not reject');
         }, error => {
-          expect(error.message).to.equal('Cannot find element: "#does-not-exist"');
+          // In Nightmare 2, the error is a string; in 3 it is an Error
+          expect(error.message || error).to.equal('Cannot find element: "#does-not-exist"');
         });
     });
     
@@ -216,7 +217,8 @@ describe('real-mouse', function() {
         .then(() => {
           throw new Error('Using a non-existent selector did not reject');
         }, error => {
-          expect(error.message).to.equal('Cannot find element: "#does-not-exist"');
+          // In Nightmare 2, the error is a string; in 3 it is an Error
+          expect(error.message || error).to.equal('Cannot find element: "#does-not-exist"');
         });
     });
   });
@@ -259,7 +261,8 @@ describe('real-mouse', function() {
         .then(() => {
           throw new Error('Using a non-existent selector did not reject');
         }, error => {
-          expect(error.message).to.equal('Cannot find element: "#does-not-exist"');
+          // In Nightmare 2, the error is a string; in 3 it is an Error
+          expect(error.message || error).to.equal('Cannot find element: "#does-not-exist"');
         });
     });
   });
