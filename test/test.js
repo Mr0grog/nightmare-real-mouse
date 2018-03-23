@@ -127,6 +127,28 @@ describe('real-mouse', function() {
           expect(title).to.equal('Submitted Page');
         });
     });
+    
+    it('should reject if the selector is not found', function() {
+      return nightmare
+        .goto(`${baseUrl}/simple`)
+        .realClick('#does-not-exist')
+        .then(() => {
+          throw new Error('Using a non-existent selector did not reject');
+        }, error => {
+          expect(error.message).to.equal('Cannot find element: "#does-not-exist"');
+        });
+    });
+    
+    it('should reject if the selector was not a string', function() {
+      return nightmare
+        .goto(`${baseUrl}/simple`)
+        .realClick(5)
+        .then(() => {
+          throw new Error('Using a non-string selector did not reject');
+        }, error => {
+          expect(error.message).to.have.string('"selector" must be a string');
+        });
+    });
   });
   
   describe('realMouseover', function() {
@@ -186,6 +208,17 @@ describe('real-mouse', function() {
           ]);
         });
     });
+    
+    it('should reject the nightmare promise if the selector is not found', function() {
+      return nightmare
+        .goto(`${baseUrl}/simple`)
+        .realMouseover('#does-not-exist')
+        .then(() => {
+          throw new Error('Using a non-existent selector did not reject');
+        }, error => {
+          expect(error.message).to.equal('Cannot find element: "#does-not-exist"');
+        });
+    });
   });
   
   describe('realMousedown', function() {
@@ -216,6 +249,17 @@ describe('real-mouse', function() {
             'mouseenter on first',
             'mousedown on first'
           ]);
+        });
+    });
+    
+    it('should reject the nightmare promise if the selector is not found', function() {
+      return nightmare
+        .goto(`${baseUrl}/simple`)
+        .realMousedown('#does-not-exist')
+        .then(() => {
+          throw new Error('Using a non-existent selector did not reject');
+        }, error => {
+          expect(error.message).to.equal('Cannot find element: "#does-not-exist"');
         });
     });
   });
