@@ -98,25 +98,21 @@ function actionOnElement(actionName) {
     const position = arguments.length > 2 ? arguments[1] : undefined;
     if (typeof selector !== 'string') {
       return done(new TypeError(`${actionName}: "selector" must be a string`));
-    } else if (position && (typeof position.x !== 'number' || typeof position.y !== 'number')) {
-      return done(new TypeError('x and y must be numbers'));
+    }
+    else if (position && (typeof position.x !== 'number' || typeof position.y !== 'number')) {
+      return done(new TypeError(`${actionName}: "position.x" and ".y" must be numbers`));
     }
     var child = this.child;
 
     debug(`Finding "${selector}"`);
-    getBounds(this, selector).then(function calcPosition(bounds) {
-      if (position) {
-        return {
-          x: Math.floor(bounds.left + position.x),
-          y: Math.floor(bounds.top + position.y)
-        };
-      } else {
-        return center(bounds);
-      }
-    }).then(function(point) {
-      debug(`${actionName} "${selector}" at ${point.x}, ${point.y}`);
-      child.call(actionName, point.x, point.y, done);
-    })
+    getBounds(this, selector)
+      .then(function(bounds) {
+        return position ? relativePosition(bounds, position) : center(bounds);
+      })
+      .then(function(point) {
+        debug(`${actionName} "${selector}" at ${point.x}, ${point.y}`);
+        child.call(actionName, point.x, point.y, done);
+      })
       .catch(done);
   }
 }
@@ -144,9 +140,15 @@ function getBounds(nightmare, selector) {
 }
 
 function center(bounds) {
-  // note mouse coordinates must be integers
   return {
     x: Math.floor(bounds.left + bounds.width / 2),
     y: Math.floor(bounds.top + bounds.height / 2)
+  };
+}
+
+function relativePosition(bounds, position) {
+  return {
+    x: Math.floor(bounds.left + position.x),
+    y: Math.floor(bounds.top + position.y)
   };
 }
