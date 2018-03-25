@@ -150,6 +150,32 @@ describe('real-mouse', function() {
           expect(error.message).to.have.string('"selector" must be a string');
         });
     });
+
+    it('should accept specified position', function () {
+      const messages = [];
+      return nightmare
+        .on('console', (type, message) => messages.push(message))
+        .goto(`${baseUrl}/simple`)
+        .evaluate(function() {
+          const boundingBox = document.body.getBoundingClientRect();
+          function logEvent(event) {
+            console.log(`${event.type} at (${event.clientX - boundingBox.left}, ${event.clientY - boundingBox.top})`);
+          }
+          document.body.addEventListener('mousedown', logEvent, true);
+        })
+        .realClick('body', {x: 30, y: 30})
+        .then(() => {
+          expect(messages).to.deep.equal(['mousedown at (30, 30)']);
+        });
+    });
+
+    it('should throw exception when position values are not numbers', function() {
+      return nightmare
+        .goto(`${baseUrl}/simple`)
+        .realClick('body', {x: '30', y: '30'})
+        .then(function(x) { throw x; },
+              function(x) { return x;});
+    });
   });
   
   describe('realMouseover', function() {

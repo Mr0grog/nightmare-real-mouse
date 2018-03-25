@@ -8,15 +8,15 @@ module.exports = function realMouse(Nightmare) {
   Nightmare.action(
     'realClick',
     realClickInternal,
-    actionOnElementCenter('realClick'));
+    actionOnElement('realClick'));
   Nightmare.action(
     'realMousedown',
     realMousedownInternal,
-    actionOnElementCenter('realMousedown'));
+    actionOnElement('realMousedown'));
   Nightmare.action(
     'realMouseover',
     realMouseoverInternal,
-    actionOnElementCenter('realMouseover'));
+    actionOnElement('realMouseover'));
 }
 
 function realMousedownInternal(name, options, parent, window, renderer, done) {
@@ -92,18 +92,28 @@ function realClickInternal(name, options, parent, window, renderer, done) {
 
 // Utilities
 
-function actionOnElementCenter(actionName) {
-  return function(selector, done) {
+function actionOnElement(actionName) {
+  return function(selector /*[, position], done */) {
+    const done = arguments[arguments.length - 1]
+    const position = arguments.length > 2 ? arguments[1] : undefined;
     if (typeof selector !== 'string') {
       return done(new TypeError(`${actionName}: "selector" must be a string`));
     }
-    debug(`Finding "${selector}"`);
+    else if (position && (typeof position.x !== 'number' || typeof position.y !== 'number')) {
+      return done(new TypeError(`${actionName}: "position.x" and ".y" must be numbers`));
+    }
     var child = this.child;
-    getBounds(this, selector).then(center).then(function(point) {
-      debug(`${actionName} "${selector}" at ${point.x}, ${point.y}`);
-      child.call(actionName, point.x, point.y, done);
-    })
-    .catch(done);
+
+    debug(`Finding "${selector}"`);
+    getBounds(this, selector)
+      .then(function(bounds) {
+        return position ? relativePosition(bounds, position) : center(bounds);
+      })
+      .then(function(point) {
+        debug(`${actionName} "${selector}" at ${point.x}, ${point.y}`);
+        child.call(actionName, point.x, point.y, done);
+      })
+      .catch(done);
   }
 }
 
@@ -130,9 +140,15 @@ function getBounds(nightmare, selector) {
 }
 
 function center(bounds) {
-  // note mouse coordinates must be integers
   return {
     x: Math.floor(bounds.left + bounds.width / 2),
     y: Math.floor(bounds.top + bounds.height / 2)
+  };
+}
+
+function relativePosition(bounds, position) {
+  return {
+    x: Math.floor(bounds.left + position.x),
+    y: Math.floor(bounds.top + position.y)
   };
 }
