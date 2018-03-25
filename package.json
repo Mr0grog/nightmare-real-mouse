@@ -1,7 +1,7 @@
 {
   "name": "nightmare-real-mouse",
-  "version": "1.0.0",
-  "description": "A Nightmare plug-in for better mimicing true mouse events",
+  "version": "1.1.0",
+  "description": "A Nightmare plug-in for better mimicking true mouse events",
   "main": "index.js",
   "scripts": {
     "test": "mocha test"
@@ -15,6 +15,10 @@
     "input"
   ],
   "author": "Rob Brackett <rob@robbrackett.com>",
+  "contributors": [
+    {"name": "Rob Brackett", "email": "rob@robbrackett.com"},
+    {"name": "@Zzzen", "url": "https://github.com/Zzzen"}
+  ],
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Mr0grog/nightmare-real-mouse/issues"

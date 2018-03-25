@@ -52,21 +52,38 @@ require('nightmare-real-mouse')(Nightmare);
 
 The plugin provides three methods that are alternatives to those built into Nightmare:
 
-### realClick(selector)
+
+### realClick(selector, [position])
 
 Click on the element with the specified `selector`. Note that, because this is a real mouse event, the click won’t actually happen directly on the specified element if it is obscured by some other element (instead, it will happen on the element that is visually "in front").
 
-The actual location of the click will be the center of the specified element.
+The actual location of the click can be specified with the second argument, `position`, which should be an object with `x` and `y` properties that are numbers. They represent offsets from the top/left corner of the element specified by `selector`. If unspecified, the position will be the center of the element.
 
 Issuing two `realClick()` calls within 300ms of each other on the same element will additionally trigger a `dblclick` event.
 
-### realMouseover(selector)
+**Example:**
+
+```js
+// Click the top-left corner of the "I'm Feeling Lucky" button on Google
+Nightmare()
+  .goto('https://google.com')
+  .realClick('input[value*="Lucky"]', {x: 1, y: 1})
+  .then(() => console.log('Clicked “I’m Feeling Lucky!”'));
+```
+
+
+### realMouseover(selector, [position])
 
 Fires `mouseover` and `mouseenter` events on the given `selector`. This will also fire the relevant `mouseout` and `mouseleave` events on elements that the mouse was previously over, if any.
 
-### realMousedown(selector)
+Like `realClick()`, the optional `position` argument is an object with `x` and `y` properties specifying the location of the event inside the element. If unspecified, the location will be the center of the element.
+
+
+### realMousedown(selector, [position])
 
 Fires the `mousedown` event on the given `selector`. It will also cause `mouseover` and `mouseenter` events on the element and `mouseout` and `mouseleave` events on whatever element the mouse *was* over if the mouse is not already over the element.
+
+Like `realClick()`, the optional `position` argument is an object with `x` and `y` properties specifying the location of the event inside the element. If unspecified, the location will be the center of the element.
 
 
 ## License
