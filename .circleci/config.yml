@@ -1,0 +1,66 @@
+version: 2
+
+basic_build: &basic_build
+  working_directory: ~/nightmare-real-mouse
+  steps:
+    - checkout
+    - run:
+        name: Binary dependencies
+        command: sudo apt-get update && sudo apt-get install dbus-x11 -y
+    - restore_cache:
+        key: dependency-cache-{{ arch }}-{{ checksum "package.json" }}-{{ .Environment.CIRCLE_STAGE }}
+    - run:
+        name: Dependencies
+        command: |
+          # --no-save would be nice here, but seems to be broken in NPM 5 :(
+          npm install "nightmare@$NIGHTMARE_VERSION"
+          npm install
+    - save_cache:
+        key: dependency-cache-{{ arch }}-{{ checksum "package.json" }}-{{ .Environment.CIRCLE_STAGE }}
+        paths:
+          - ./node_modules
+    - run:
+        name: Test
+        command: npm test
+
+node8_environment: &node8_environment
+  docker:
+    - image: circleci/node:8-browsers
+
+node6_environment: &node6_environment
+  docker:
+    - image: circleci/node:6-browsers
+
+jobs:
+  build_node8_nightmare3:
+    <<: *node8_environment
+    <<: *basic_build
+    environment:
+      NIGHTMARE_VERSION: ^3.0.0
+
+  build_node8_nightmare2:
+    <<: *node8_environment
+    <<: *basic_build
+    environment:
+      NIGHTMARE_VERSION: ^2.10.0
+
+  build_node6_nightmare3:
+    <<: *node6_environment
+    <<: *basic_build
+    environment:
+      NIGHTMARE_VERSION: ^3.0.0
+
+  build_node6_nightmare2:
+    <<: *node6_environment
+    <<: *basic_build
+    environment:
+      NIGHTMARE_VERSION: ^2.10.0
+
+workflows:
+  version: 2
+  build_all:
+    jobs:
+      - build_node8_nightmare3
+      - build_node8_nightmare2
+      - build_node6_nightmare3
+      - build_node6_nightmare2
