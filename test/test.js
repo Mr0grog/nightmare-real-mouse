@@ -298,7 +298,10 @@ let server = express();
 server.get('/', function(request, response) {
   response.end(`<!DOCTYPE html>
     <html>
-      <head><title>Index</title></head>
+      <head>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+        <title>Index</title>
+      </head>
       <body>
         <form method="GET" action="/submit">
           <input type="submit" id="submit" value="Submit!" />
@@ -310,7 +313,10 @@ server.get('/', function(request, response) {
 server.get('/submit', function(request, response) {
   response.end(`<!DOCTYPE html>
     <html>
-      <head><title>Submitted Page</title></head>
+      <head>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+        <title>Submitted Page</title>
+      </head>
       <body>
         You got to the second page!
       </body>
@@ -320,7 +326,10 @@ server.get('/submit', function(request, response) {
 server.get('/simple', function(request, response) {
   response.end(`<!DOCTYPE html>
     <html>
-      <head><title>Simple Page</title></head>
+      <head>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+        <title>Simple Page</title>
+      </head>
       <body>
         <p id="first">Paragraph with text</p>
         <p id="second">Another paragraph</p>
